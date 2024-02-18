@@ -3,7 +3,8 @@ import NotesContext from "../context/NotesContext";
 import { useNavigate } from "react-router-dom";
 
 export default function AddNote() {
-  const { addNote } = useContext(NotesContext);
+  const NotesProvider = useContext(NotesContext);
+  const { addNote } = NotesProvider;
   const navigate = useNavigate();
 
   const [newNote, setNewNote] = useState({

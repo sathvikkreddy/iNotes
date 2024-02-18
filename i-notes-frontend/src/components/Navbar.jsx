@@ -37,16 +37,19 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+            <i
+              role="button"
+              className={`fa-regular fa-user mx-2 ${
+                !loginState ? "d-none" : ""
+              }`}
+              onClick={() => navigate("/profile")}
+            ></i>
             <button
               className="btn btn-primary mx-2"
               onClick={(e) => handleAuthClick(e)}
             >
               {loginState ? "logout" : "login"}
             </button>
-            {/* <i
-              className="fa-regular fa-user"
-              onClick={(e) => handleProfileClick()}
-            ></i> */}
           </div>
         </div>
       </nav>

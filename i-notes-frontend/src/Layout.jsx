@@ -2,13 +2,16 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import AuthProvider from "./context/AuthProvider";
+import NotesProvider from "./context/NotesProvider";
 
 function Layout() {
   return (
     <>
       <AuthProvider>
-        <Navbar />
-        <Outlet />
+        <NotesProvider>
+          <Navbar />
+          <Outlet />
+        </NotesProvider>
       </AuthProvider>
     </>
   );

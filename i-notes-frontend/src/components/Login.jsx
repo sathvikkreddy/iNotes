@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+// import NotesContext from "../context/NotesContext";
 
 function Login() {
   const navigate = useNavigate();
@@ -9,6 +10,9 @@ function Login() {
   const AuthProvider = useContext(AuthContext);
   const { login, loginState } = AuthProvider;
 
+  // const NotesProvider = useContext(NotesContext);
+  // const { setAllNotes } = NotesProvider;
+
   //states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,9 +20,8 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Redirect to intended destination route after login if already authenticated
     if (loginState) {
-      navigate("/profile");
+      navigate("/");
     }
   }, [loginState, navigate]);
 

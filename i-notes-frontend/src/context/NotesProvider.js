@@ -1,54 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import NotesContext from "./NotesContext";
+import AuthContext from "../context/AuthContext";
 
 const NotesProvider = ({ children }) => {
-  const notesInitial = [
-    {
-      _id: "65c60254998641c3039c5abf",
-      userId: "65c5ce5860c5c22a0b101117",
-      title: "mcurie's 1st note",
-      note: "This is my 1st note, happy to write note on i-notess app",
-      tag: "tag1",
-      timestamp: "2024-02-09T10:45:40.922Z",
-      __v: 0,
-    },
-    {
-      _id: "65c60254998641c3039c5abg",
-      userId: "65c5ce5860c5c22a0b101117",
-      title: "mcurie's 2nd note",
-      note: "This is my 2nd note, happy to write note on i-notess app",
-      tag: "tag2",
-      timestamp: "2024-02-09T10:45:40.922Z",
-      __v: 0,
-    },
-    {
-      _id: "65c60254998641c3039c5abh",
-      userId: "65c5ce5860c5c22a0b101117",
-      title: "mcurie's 3rd note",
-      note: "This is my 3rd note, happy to write note on i-notess app",
-      tag: "tag3",
-      timestamp: "2024-02-09T10:45:40.922Z",
-      __v: 0,
-    },
-    {
-      _id: "65c60254998641c3039c5abi  ",
-      userId: "65c5ce5860c5c22a0b101117",
-      title: "mcurie's 4th note",
-      note: "This is my 4th note, happy to write note on i-notess app",
-      tag: "tag4",
-      timestamp: "2024-02-09T10:45:40.922Z",
-      __v: 0,
-    },
-  ];
+  // AuthContext
+  const AuthProvider = useContext(AuthContext);
+  const { loginState } = AuthProvider;
 
-  const [notes, setNotes] = useState(notesInitial);
+  const [notes, setNotes] = useState([]);
 
-  const addNote = (newNote) => {
-    setNotes(notes.concat(newNote));
+  //update all notes of user
+  const updateNotes = async () => {
+    if (!loginState) {
+      setNotes([]);
+      return false;
+    }
+    const getAllNotesUrl = "http://localhost:5000/api/notes/getAllNotes";
+    const headers = {
+      "JWT-Token": sessionStorage.getItem("jwtToken"),
+      "Content-Type": "application/json",
+    };
+    try {
+      const response = await fetch(getAllNotesUrl, {
+        method: "GET", // or 'GET', 'PUT', etc.
+        headers: headers,
+      });
+
+      const responseBody = await response.json();
+
+      setNotes(responseBody.notes);
+      return true;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // delete a note
+  const deleteNote = async (id) => {
+    console.log("entered the deleteNote in notes context");
+    const deleteNoteUrl = `http://localhost:5000/api/notes/deleteNote?noteId=${id}`;
+    const headers = {
+      "JWT-Token": sessionStorage.getItem("jwtToken"),
+      "Content-Type": "application/json",
+    };
+    try {
+      await fetch(deleteNoteUrl, {
+        method: "DELETE", // or 'GET', 'PUT', etc.
+        headers: headers,
+      });
+
+      await updateNotes();
+      console.log("deleted the note " + id);
+      return true;
+    } catch (error) {
+      console.log(error.message);
+      return false;
+    }
   };
 
   return (
-    <NotesContext.Provider value={{ notes, addNote }}>
+    <NotesContext.Provider value={{ notes, updateNotes, deleteNote }}>
       {children}
     </NotesContext.Provider>
   );

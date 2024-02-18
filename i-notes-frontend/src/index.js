@@ -6,12 +6,13 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
-import Home from "./components/Home";
+// import Home from "./components/Home";
 import Layout from "./Layout";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import PageNotFound from "./components/PageNotFound";
 import PrivateRoutes from "./components/PrivateRoutes";
+import Notes from "./components/Notes";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -20,7 +21,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<Layout />}>
       <Route path="login" exact element={<Login />} />
       <Route element={<PrivateRoutes />}>
-        <Route path="" element={<Home />} />
+        <Route path="" element={<Notes />} />
         <Route path="profile" element={<Profile />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
