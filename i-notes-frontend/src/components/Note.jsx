@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
 import NotesContext from "../context/NotesContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Note(props) {
+  const navigate = useNavigate();
+
   const NotesProvider = useContext(NotesContext);
-  const { deleteNote } = NotesProvider;
+  const { deleteNote, setCurrentNote } = NotesProvider;
 
   const { note } = props;
   const handleDelete = (id) => {
@@ -12,6 +15,8 @@ export default function Note(props) {
 
   const handleNoteClick = (note) => {
     console.log("clicked on the note " + note._id);
+    setCurrentNote(note);
+    navigate("/editNote");
   };
 
   return (

@@ -13,8 +13,9 @@ export default function AddNote() {
     tag: "",
   });
 
-  const onSubmit = (e) => {
+  const onSubmit = (e, newNote) => {
     e.preventDefault();
+    console.log(newNote);
     addNote(newNote);
     navigate("/");
   };
@@ -27,50 +28,43 @@ export default function AddNote() {
 
   return (
     <div className="container my-3">
-      <h2>Write New Note....</h2>
-      <form className="conatiner my-3" onSubmit={onSubmit}>
+      <form className="conatiner my-3" onSubmit={(e) => onSubmit(e, newNote)}>
         <div className="mb-3">
-          <label htmlFor="title" className="form-label">
-            Title
-          </label>
           <input
             type="text"
-            className="form-control"
+            className="form-control border-0 border-bottom"
             id="title"
             name="title"
+            placeholder="Untitled Note"
             onChange={onChange}
             value={newNote.title}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="note" className="form-label">
-            Note
-          </label>
           <textarea
-            className="form-control"
+            className="form-control border-0 "
             id="note"
             name="note"
+            placeholder="write you note here"
             rows="5"
             onChange={onChange}
             value={newNote.note}
           ></textarea>
         </div>
         <div className="mb-3">
-          <label htmlFor="tag" className="form-label">
-            Tag
-          </label>
           <input
             type="text"
-            className="form-control"
+            className="form-control border-0 border-top"
             id="tag"
             name="tag"
+            placeholder="add tag"
             onChange={onChange}
             value={newNote.tag}
           />
         </div>
 
         <button type="submit" className="btn btn-primary">
-          Submit
+          Add
         </button>
       </form>
     </div>

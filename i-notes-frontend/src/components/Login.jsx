@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-// import NotesContext from "../context/NotesContext";
 
 function Login() {
   const navigate = useNavigate();
@@ -9,9 +8,6 @@ function Login() {
   // AuthContext
   const AuthProvider = useContext(AuthContext);
   const { login, loginState } = AuthProvider;
-
-  // const NotesProvider = useContext(NotesContext);
-  // const { setAllNotes } = NotesProvider;
 
   //states
   const [email, setEmail] = useState("");

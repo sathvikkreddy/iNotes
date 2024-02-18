@@ -8,6 +8,7 @@ const NotesProvider = ({ children }) => {
   const { loginState } = AuthProvider;
 
   const [notes, setNotes] = useState([]);
+  const [currentNote, setCurrentNote] = useState(null);
 
   //update all notes of user
   const updateNotes = async () => {
@@ -35,6 +36,68 @@ const NotesProvider = ({ children }) => {
     }
   };
 
+  // add a note
+
+  const addNote = async (note) => {
+    console.log("entered the addNote in notes context");
+    const addNoteUrl = "http://localhost:5000/api/notes/addNote";
+    const headers = {
+      "JWT-Token": sessionStorage.getItem("jwtToken"),
+      "Content-Type": "application/json",
+    };
+    const requestBody = {
+      title: note.title,
+      note: note.note,
+      tag: note.tag === "" ? "general" : note.tag,
+    };
+    try {
+      const response = await fetch(addNoteUrl, {
+        method: "POST", // or 'GET', 'PUT', etc.
+        headers: headers,
+        body: JSON.stringify(requestBody),
+      });
+      const responseBody = await response.json();
+      const noteId = responseBody.noteId;
+      console.log("added the note " + noteId);
+      await updateNotes();
+      console.log("updated notes");
+      return true;
+    } catch (error) {
+      console.log(error.message);
+      return false;
+    }
+  };
+
+  // edit a note
+  const editNote = async (noteId, newNote) => {
+    console.log("entered the editNote in notes context");
+    const editNoteUrl = `http://localhost:5000/api/notes/updateNote?noteId=${noteId}`;
+    const headers = {
+      "JWT-Token": sessionStorage.getItem("jwtToken"),
+      "Content-Type": "application/json",
+    };
+    const requestBody = {
+      title: newNote.title,
+      note: newNote.note,
+      tag: newNote.tag === "" ? "general" : newNote.tag,
+    };
+    try {
+      await fetch(editNoteUrl, {
+        method: "PUT", // or 'GET', 'PUT', etc.
+        headers: headers,
+        body: JSON.stringify(requestBody),
+      });
+
+      console.log("edited the note " + noteId);
+      await updateNotes();
+      console.log("updated notes");
+      return true;
+    } catch (error) {
+      console.log(error.message);
+      return false;
+    }
+  };
+
   // delete a note
   const deleteNote = async (id) => {
     console.log("entered the deleteNote in notes context");
@@ -48,9 +111,9 @@ const NotesProvider = ({ children }) => {
         method: "DELETE", // or 'GET', 'PUT', etc.
         headers: headers,
       });
-
-      await updateNotes();
       console.log("deleted the note " + id);
+      await updateNotes();
+      console.log("updated notes");
       return true;
     } catch (error) {
       console.log(error.message);
@@ -59,7 +122,17 @@ const NotesProvider = ({ children }) => {
   };
 
   return (
-    <NotesContext.Provider value={{ notes, updateNotes, deleteNote }}>
+    <NotesContext.Provider
+      value={{
+        notes,
+        updateNotes,
+        deleteNote,
+        addNote,
+        editNote,
+        currentNote,
+        setCurrentNote,
+      }}
+    >
       {children}
     </NotesContext.Provider>
   );

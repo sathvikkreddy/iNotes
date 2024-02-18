@@ -6,14 +6,20 @@ import NotesProvider from "./context/NotesProvider";
 
 function Layout() {
   return (
-    <>
+    <div
+      style={{
+        fontFamily: "Poppins",
+        fontWeight: "400",
+        fontStyle: "normal",
+      }}
+    >
       <AuthProvider>
         <NotesProvider>
           <Navbar />
           <Outlet />
         </NotesProvider>
       </AuthProvider>
-    </>
+    </div>
   );
 }
 

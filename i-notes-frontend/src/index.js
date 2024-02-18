@@ -13,6 +13,8 @@ import Profile from "./components/Profile";
 import PageNotFound from "./components/PageNotFound";
 import PrivateRoutes from "./components/PrivateRoutes";
 import Notes from "./components/Notes";
+import AddNote from "./components/AddNote";
+import EditNote from "./components/EditNote";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -23,6 +25,8 @@ const router = createBrowserRouter(
       <Route element={<PrivateRoutes />}>
         <Route path="" element={<Notes />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="addNote" element={<AddNote />} />
+        <Route path="editNote" element={<EditNote />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
     </Route>

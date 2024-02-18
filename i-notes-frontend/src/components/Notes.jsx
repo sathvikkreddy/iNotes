@@ -1,24 +1,33 @@
 import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Note from "./Note";
 import NotesContext from "../context/NotesContext";
-import AuthContext from "../context/AuthContext";
+// import AuthContext from "../context/AuthContext";
 
 const Notes = () => {
   const NotesProvider = useContext(NotesContext);
-  const AuthProvider = useContext(AuthContext);
+  // const AuthProvider = useContext(AuthContext);
 
   const { notes, updateNotes } = NotesProvider;
-  const { loginState } = AuthProvider;
+  // const { loginState } = AuthProvider;
 
   useEffect(() => {
     updateNotes();
-  }, [loginState, updateNotes]);
+    // eslint-disable-next-line
+  }, []);
+
+  const navigate = useNavigate();
 
   return (
     <div className="container my-5">
       <div className="d-flex justify-content-between">
         <h1>Your Notes</h1>
-        <button className="btn btn-primary">
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            navigate("/addnote");
+          }}
+        >
           <i className="fa-solid fa-plus"></i> New Note
         </button>
       </div>
