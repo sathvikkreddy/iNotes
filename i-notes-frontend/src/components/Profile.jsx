@@ -5,9 +5,6 @@ const Profile = () => {
   const AuthProvider = useContext(AuthContext);
   const { user } = AuthProvider;
 
-  console.log("in profile");
-  console.log(user);
-
   return (
     <div className="container text-center">
       <img
@@ -17,9 +14,6 @@ const Profile = () => {
       />
       <h2>Name: {user.name}</h2>
       <h2>Email: {user.email}</h2>
-      <h3 className="fw-light">
-        No. of notes:{user.notes ? user.notes.length : "loading.."}
-      </h3>
     </div>
   );
 };

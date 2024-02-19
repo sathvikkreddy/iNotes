@@ -8,12 +8,14 @@ const NotesProvider = ({ children }) => {
   const { loginState } = AuthProvider;
 
   const [notes, setNotes] = useState([]);
+  const [noOfNotes, setNoOfNotes] = useState(0);
   const [currentNote, setCurrentNote] = useState(null);
 
   //update all notes of user
   const updateNotes = async () => {
     if (!loginState) {
       setNotes([]);
+      setNoOfNotes(0);
       return false;
     }
     const getAllNotesUrl = "http://localhost:5000/api/notes/getAllNotes";
@@ -29,7 +31,9 @@ const NotesProvider = ({ children }) => {
 
       const responseBody = await response.json();
 
+      console.log(responseBody.notes.length);
       setNotes(responseBody.notes);
+      setNoOfNotes(notes.length);
       return true;
     } catch (error) {
       console.log(error.message);
@@ -125,6 +129,7 @@ const NotesProvider = ({ children }) => {
     <NotesContext.Provider
       value={{
         notes,
+        noOfNotes,
         updateNotes,
         deleteNote,
         addNote,
