@@ -13,17 +13,41 @@ export default function AddNote() {
     tag: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isNoteValid, setIsNoteValid] = useState(false);
+
+  const validate = (field, value) => {
+    if (field === "title") {
+      if (value.trim().length > 2) {
+        setIsTitleValid(true);
+      } else {
+        setIsTitleValid(false);
+      }
+    }
+    if (field === "note") {
+      if (value.trim().length > 5) {
+        setIsNoteValid(true);
+      } else {
+        setIsNoteValid(false);
+      }
+    }
+  };
+
   const onSubmit = (e, newNote) => {
     e.preventDefault();
+    setIsLoading(true);
     console.log(newNote);
     addNote(newNote);
     navigate("/");
+    setIsLoading(false);
   };
 
   const onChange = (e) => {
     let field = e.target.name;
     let value = e.target.value;
     setNewNote({ ...newNote, [field]: value });
+    validate(field, value);
   };
 
   return (
@@ -63,8 +87,23 @@ export default function AddNote() {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
-          Add
+        <div className="text-danger mt-5" style={{ fontSize: "15px" }}>
+          <p className={`container ${!isTitleValid ? "" : "d-none"}`}>
+            * title atlest be of 3 chars long
+          </p>
+          <p className={`container ${!isNoteValid ? "" : "d-none"}`}>
+            * note atlest be of 6 chars long
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          className={`btn btn-primary ${
+            isTitleValid && isNoteValid ? "" : "d-none"
+          }`}
+          disabled={isLoading}
+        >
+          {isLoading ? "Adding..." : "Add"}
         </button>
       </form>
     </div>

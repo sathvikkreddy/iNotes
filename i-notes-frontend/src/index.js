@@ -15,6 +15,7 @@ import PrivateRoutes from "./components/PrivateRoutes";
 import Notes from "./components/Notes";
 import AddNote from "./components/AddNote";
 import EditNote from "./components/EditNote";
+import SignUp from "./components/SignUp";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="login" exact element={<Login />} />
+      <Route path="signUp" exact element={<SignUp />} />
       <Route element={<PrivateRoutes />}>
         <Route path="" element={<Notes />} />
         <Route path="profile" element={<Profile />} />

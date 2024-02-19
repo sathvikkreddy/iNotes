@@ -17,6 +17,11 @@ const Navbar = () => {
     }
   };
 
+  const handleSignUpClick = (e) => {
+    e.preventDefault();
+    navigate("/signUp");
+  };
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -44,6 +49,12 @@ const Navbar = () => {
               }`}
               onClick={() => navigate("/profile")}
             ></i>
+            <button
+              className={`btn btn-primary mx-2 ${loginState ? "d-none" : ""}`}
+              onClick={(e) => handleSignUpClick(e)}
+            >
+              {loginState ? "" : "sign up"}
+            </button>
             <button
               className="btn btn-primary mx-2"
               onClick={(e) => handleAuthClick(e)}

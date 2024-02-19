@@ -26,13 +26,13 @@ router.post(
       // validating the values entered by user
       if (result.array().length !== 0) {
         return res
-          .status(400)
+          .status(401)
           .json({ message: "Invalid user values", errors: result.array() });
       }
       // checking if user email exists
       const user = await User.findOne({ email: req.body.email });
       if (user) {
-        return res.status(500).json({
+        return res.status(409).json({
           message: "User with this email already exists",
           errors: [{ msg: "user already exists" }],
         });
@@ -50,7 +50,7 @@ router.post(
       // generating signed jwt token
       const jwtToken = jwt.sign({ userId: newUser.id }, secretJwtKey);
 
-      res.status(201).json({
+      res.status(200).json({
         message: "User created successfully",
         jwtToken,
       });
@@ -78,27 +78,27 @@ router.post(
       // validating the creds entered by user
       if (result.array().length !== 0) {
         return res
-          .status(400)
+          .status(401)
           .json({ message: "Invalid user values", errors: result.array() });
       }
       const { email, password } = req.body;
       // compare the creds
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json({
+        return res.status(404).json({
           message: "User does not exists",
         });
       }
 
       const isValidUser = await bcrypt.compare(password, user.password);
       if (!isValidUser) {
-        return res.status(400).json({ message: "Invalid Creds" });
+        return res.status(401).json({ message: "Invalid Creds" });
       }
 
       // generating signed jwt token
       const jwtToken = jwt.sign({ userId: user.id }, secretJwtKey);
 
-      res.status(201).json({
+      res.status(200).json({
         message: "Login successful",
         jwtToken,
       });

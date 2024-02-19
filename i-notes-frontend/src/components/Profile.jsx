@@ -1,22 +1,27 @@
 import React, { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import Unauthorized from "./Unauthorized";
 
-export default function Profile() {
+const Profile = () => {
   const AuthProvider = useContext(AuthContext);
-  const { loginState, user } = AuthProvider;
+  const { user } = AuthProvider;
 
-  let content;
-  if (loginState) {
-    content = (
-      <div>
-        <p>Name: {user.name}</p>
-        <p>Email: {user.email}</p>
-      </div>
-    );
-  } else {
-    content = <Unauthorized />;
-  }
+  console.log("in profile");
+  console.log(user);
 
-  return content;
-}
+  return (
+    <div className="container text-center">
+      <img
+        src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
+        alt="profile"
+        style={{ maxWidth: "30%" }}
+      />
+      <h2>Name: {user.name}</h2>
+      <h2>Email: {user.email}</h2>
+      <h3 className="fw-light">
+        No. of notes:{user.notes ? user.notes.length : "loading.."}
+      </h3>
+    </div>
+  );
+};
+
+export default Profile;

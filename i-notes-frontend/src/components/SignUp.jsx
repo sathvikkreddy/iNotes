@@ -2,14 +2,15 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
-function Login() {
+function SignUp() {
   const navigate = useNavigate();
 
   // AuthContext
   const AuthProvider = useContext(AuthContext);
-  const { login, loginState } = AuthProvider;
+  const { signUp, loginState } = AuthProvider;
 
   //states
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
@@ -24,33 +25,39 @@ function Login() {
   }, [loginState, navigate]);
 
   // handle functions
+  const onNameChange = (e) => {
+    setName(e.target.value);
+  };
+
   const onEmailChange = (e) => {
     setEmail(e.target.value);
   };
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
-  const onLogin = async (e, email, password) => {
+  const onSignUp = async (e, name, email, password) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log("entered login");
-    status = await login(email, password);
+    console.log("entered sign up");
+    status = await signUp(name, email, password);
     setIsLoading(false);
     switch (status) {
       case 200:
         setMessage(null);
         break;
       case 401:
-        setMessage("Invalid Creds");
+        setMessage(
+          "Name and email can't be empty, password must be atleast 8 chars long"
+        );
         break;
-      case 404:
-        setMessage("User doesn't exist, try signing up with your email");
+      case 409:
+        setMessage("User already exist, try logging in with your email");
         break;
       case 500:
         setMessage("Internal server error occured");
         break;
       default:
-        setMessage("default case in login");
+        console.log("default case in sign up");
     }
   };
 
@@ -58,12 +65,24 @@ function Login() {
     !loginState && (
       <div>
         <div className="container text-center">
-          <h2>Login</h2>
+          <h2>Sign Up</h2>
           <form
             onSubmit={(e) => {
-              onLogin(e, email, password);
+              onSignUp(e, name, email, password);
             }}
           >
+            <div className="mb-3">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                value={name}
+                onChange={onNameChange}
+              />
+            </div>
             <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 Email address
@@ -93,7 +112,7 @@ function Login() {
               className="btn btn-primary"
               disabled={isLoading}
             >
-              {isLoading ? "logging in..." : "login"}
+              {isLoading ? "signing up..." : "sign up"}
             </button>
           </form>
           <p className="my-3">{message}</p>
@@ -103,4 +122,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;

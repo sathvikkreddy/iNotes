@@ -31,6 +31,9 @@ const Notes = () => {
           <i className="fa-solid fa-plus"></i> New Note
         </button>
       </div>
+      <div className={`${notes.length < 1 ? "" : "d-none"}`}>
+        <p className="my-5 fs-4">No notes..</p>
+      </div>
       <div className="my-4">
         <div className="row">
           {notes.map((note) => {

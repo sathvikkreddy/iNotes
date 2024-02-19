@@ -9,11 +9,31 @@ export default function EditNote() {
 
   const [newNote, setNewNote] = useState({
     title: currentNote.title,
-    note: currentNote.title,
+    note: currentNote.note,
     tag: currentNote.tag,
   });
 
   const [isChanged, setIsChanged] = useState(false);
+
+  const [isTitleValid, setIsTitleValid] = useState(true);
+  const [isNoteValid, setIsNoteValid] = useState(true);
+
+  const validate = (field, value) => {
+    if (field === "title") {
+      if (value.trim().length > 2) {
+        setIsTitleValid(true);
+      } else {
+        setIsTitleValid(false);
+      }
+    }
+    if (field === "note") {
+      if (value.trim().length > 5) {
+        setIsNoteValid(true);
+      } else {
+        setIsNoteValid(false);
+      }
+    }
+  };
 
   const onSubmit = (e, newNote) => {
     e.preventDefault();
@@ -26,6 +46,7 @@ export default function EditNote() {
     let value = e.target.value;
     setNewNote({ ...newNote, [field]: value });
     setIsChanged(true);
+    validate(field, value);
   };
 
   return (
@@ -34,9 +55,10 @@ export default function EditNote() {
         <div className="mb-3">
           <input
             type="text"
-            className="form-control border-0 border-bottom"
+            className="form-control border-0 border-bottom fw-bold"
             id="title"
             name="title"
+            placeholder="Untitled"
             onChange={onChange}
             value={newNote.title}
           />
@@ -47,6 +69,7 @@ export default function EditNote() {
             id="note"
             name="note"
             rows="5"
+            placeholder="write note here"
             onChange={onChange}
             value={newNote.note}
           ></textarea>
@@ -54,17 +77,29 @@ export default function EditNote() {
         <div className="mb-3">
           <input
             type="text"
-            className="form-control border-0 border-top"
+            className="form-control border-0 border-top fst-italic"
             id="tag"
             name="tag"
             onChange={onChange}
+            placeholder="#tag"
             value={newNote.tag}
           />
         </div>
 
+        <div className="fs-6 text-danger">
+          <p className={`container ${!isTitleValid ? "" : "d-none"}`}>
+            * title atlest be of 3 chars long
+          </p>
+          <p className={`container ${!isNoteValid ? "" : "d-none"}`}>
+            * note atlest be of 6 chars long
+          </p>
+        </div>
+
         <button
           type="submit"
-          className={`btn btn-primary ${isChanged ? "" : "d-none"}`}
+          className={`btn btn-primary ${
+            isChanged && isNoteValid && isTitleValid ? "" : "d-none"
+          }`}
         >
           Save Changes
         </button>

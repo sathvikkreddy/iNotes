@@ -13,16 +13,16 @@ const AuthProvider = ({ children }) => {
       "Content-Type": "application/json",
     };
 
-    const getUserUrl = "http://localhost:5000/api/auth/getUser";
+    const updateUserUrl = "http://localhost:5000/api/auth/getUser";
 
     try {
-      const response = await fetch(getUserUrl, {
+      const response = await fetch(updateUserUrl, {
         method: "POST", // or 'GET', 'PUT', etc.
         headers: headers,
       });
       const responseBody = await response.json();
-      const { _id, name, email } = responseBody;
-      setUser({ id: _id, name, email });
+      const { _id, name, email, notes } = responseBody;
+      setUser({ id: _id, name, email, notes });
       console.log("user is updated");
       return user;
     } catch (error) {
@@ -33,6 +33,43 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(
     jwtToken ? async () => await updateUser() : null
   );
+
+  // sign up
+  const signUp = async (name, email, password) => {
+    const loginUrl = "http://localhost:5000/api/auth/signUp";
+    const requestBody = {
+      name,
+      email,
+      password,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    try {
+      const response = await fetch(loginUrl, {
+        method: "POST", // or 'GET', 'PUT', etc.
+        headers: headers,
+        body: JSON.stringify(requestBody), // Convert object to JSON string
+      });
+
+      const responseBody = await response.json();
+
+      const jwtToken = responseBody.jwtToken;
+      if (!jwtToken) {
+        return response.status;
+      }
+      sessionStorage.setItem("jwtToken", jwtToken);
+      console.log(jwtToken);
+
+      await updateUser();
+
+      setLoginState(true);
+      console.log("signed up");
+      return response.status;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   // login
   const login = async (email, password) => {
@@ -55,16 +92,16 @@ const AuthProvider = ({ children }) => {
 
       const jwtToken = responseBody.jwtToken;
       if (!jwtToken) {
-        return false;
+        return response.status;
       }
       sessionStorage.setItem("jwtToken", jwtToken);
       console.log(jwtToken);
 
-      await updateUser(jwtToken);
+      await updateUser();
 
       setLoginState(true);
       console.log("logged in");
-      return true;
+      return response.status;
     } catch (error) {
       console.log(error.message);
     }
@@ -83,7 +120,9 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, loginState, user, logout }}>
+    <AuthContext.Provider
+      value={{ login, signUp, loginState, user, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
